@@ -1,0 +1,275 @@
+# QDataV2 Server — AI 开发指南
+
+> 数据行知平台（Data Praxis Platform）| Django 5.0 + DRF + PostgreSQL
+> 本文档为 AI Code Agent 提供开发约定和决策索引。代码示例请查阅链接文档。
+
+---
+
+## 🚀 开发流程 7 步
+
+### Step 1: 确定模型类型
+
+```
+需要租户隔离？
+  ├─ 是 → 需要组织(公司/部门)隔离？
+  │       ├─ 是 → OrgAwareModel ⭐
+  │       └─ 否 → TenantAwareModel ⭐（大多数业务模型）
+  └─ 否 → 系统级数据？
+           ├─ 是 → BaseModel（如 Tenant, User）
+           └─ 否 → SoftDeleteModel（无租户但需审计）
+```
+
+### Step 2: 创建模型文件
+
+- 位置: `apps/{app}/models/{model}_model.py`（一模型一文件）
+- 继承: `TenantAwareModel` / `OrgAwareModel`
+- 必须: `class Meta: db_table = '{app}_{model}'` + 索引 + `verbose_name`
+- → 完整示例: [docs/STANDARDS/backend-standards.md](docs/STANDARDS/backend-standards.md)
+
+### Step 3: 创建序列化器
+
+- 位置: `apps/{app}/serializers/{model}_serializer.py`
+- 列表: `TenantAwareListSerializer`（精简字段）
+- 详情: `TenantAwareDetailSerializer`（完整字段）
+- 创建/更新: `CreateModelSerializer` / `UpdateModelSerializer`
+- → 完整示例: [docs/STANDARDS/backend-standards.md](docs/STANDARDS/backend-standards.md)
+
+### Step 4: 创建视图集
+
+- 位置: `apps/{app}/views/{model}_viewset.py`
+- 继承: `FetchMixin` + `TenantAwareViewSet`
+- **必须**: 所有 action 配置 `@extend_schema` tags（使用 `Tags` 常量）
+- 配置: `list_serializer_class` / `detail_serializer_class` / `search_fields` / `filterable_fields`
+- → 完整示例: [docs/STANDARDS/view-development.md](docs/STANDARDS/view-development.md)
+
+### Step 5: 配置 `__init__.py` 导出
+
+每个 `models/`、`serializers/`、`views/` 目录的 `__init__.py` 必须导出所有公开类。
+
+### Step 6: 配置路由
+
+- `apps/{app}/urls.py`: 使用 `DefaultRouter` 注册 ViewSet
+- `config/api_urls.py`: 注册 app 路由 `path('v1/{app}/', include('apps.{app}.urls'))`
+
+### Step 7: 迁移并测试
+
+```bash
+python manage.py makemigrations {app} && python manage.py migrate
+python manage.py test {app}
+```
+
+CI 自动启动 PostgreSQL，放心编写数据库测试。
+
+---
+
+## ⚠️ 核心原则（铁律）
+
+| # | 原则 | 说明 |
+|---|------|------|
+| 1 | **单文件职责** | 一模型一文件、一视图集一文件、一序列化器一文件 |
+| 2 | **继承基类** | 禁止 `models.Model` / `ModelViewSet`，必须用项目基类 |
+| 3 | **审计自动** | 禁止手动设置 `created_by` / `tenant`，基类自动填充 |
+| 4 | **软删除默认** | `delete()` = 软删除；`delete(hard=True)` = 硬删除（慎用） |
+| 5 | **租户自动** | `TenantAwareModel.objects.all()` 自动过滤当前租户 |
+| 6 | **表名规范** | `db_table = '{app}_{model}'` |
+| 7 | **索引必加** | `indexes = [models.Index(fields=['tenant', '常用字段'])]` |
+| 8 | **Tags 必配** | 所有 ViewSet action（含继承的）必须配 `@extend_schema` tags |
+| 9 | **Tags 常量** | `from apps.core.openapi import Tags`，禁止硬编码字符串 |
+| 10 | **用户引用** | `settings.AUTH_USER_MODEL`，禁止硬编码 `"system.User"` |
+
+### 字段命名规范
+
+| 用途 | 标准字段名 | 禁止使用 |
+|------|-----------|----------|
+| 排序 | `sort_order` | ordering, order, sort |
+| 启用 | `is_active` | is_enabled, enabled |
+| 描述 | `description` | desc |
+| 摘要 | `summary` | brief, intro |
+| 编码 | `code` | no, number |
+| 过期 | `expires_at` | expired_at |
+
+→ 完整规范: [docs/STANDARDS/model-field-standards.md](docs/STANDARDS/model-field-standards.md)
+
+---
+
+## 📦 核心模块速查
+
+### 模型基类
+
+| 类 | 用途 |
+|----|------|
+| `BaseModel` | 系统级模型 (Tenant, User) — UUID 主键 + 审计 |
+| `SoftDeleteModel` | 无租户但需审计 + 软删除 |
+| `TenantAwareModel` | 业务模型 ⭐ — 租户隔离 + 审计 + 软删除 |
+| `OrgAwareModel` | 组织隔离 ⭐ — 公司/部门隔离 |
+
+→ `from apps.core.models import TenantAwareModel, OrgAwareModel`
+
+### 视图基类
+
+| 类 | 用途 |
+|----|------|
+| `TenantAwareViewSet` | 业务资源 ⭐ (CRUD + 批量操作 + 审计填充) |
+| `OrgAwareViewSet` | 组织隔离资源 ⭐ |
+| `BaseModelViewSet` | 系统级资源 |
+| `FetchMixin` | 高级查询 (POST /fetch) |
+
+→ `from apps.core.views import TenantAwareViewSet` + `from apps.core.mixins import FetchMixin`
+
+### 序列化器基类
+
+| 类 | 用途 |
+|----|------|
+| `TenantAwareListSerializer` | 租户列表 ⭐ (精简) |
+| `TenantAwareDetailSerializer` | 租户详情 ⭐ (完整) |
+| `OrgAwareListSerializer` / `OrgAwareDetailSerializer` | 组织隔离 ⭐ |
+| `CreateModelSerializer` / `UpdateModelSerializer` | 写入操作 |
+
+→ `from apps.core.serializers import TenantAwareListSerializer, TenantAwareDetailSerializer`
+
+### 异常类
+
+| 类 | HTTP 码 |
+|----|---------|
+| `ValidationException` | 400 |
+| `AuthenticationException` | 401 |
+| `PermissionException` | 403 |
+| `NotFoundException` | 404 |
+| `BusinessException` ⭐ | 422 |
+
+→ `from apps.core.exceptions import BusinessException, NotFoundException`
+
+### 权限类
+
+| 类 | 用途 |
+|----|------|
+| `IsTenantUser` / `IsTenantAdmin` | 租户权限 |
+| `HasPermission` | RBAC 权限码 |
+| `IsCompanyUser` / `HasDataPermission` | 组织权限 |
+| `ActionBasedPermission` | 按操作权限 |
+
+→ `from apps.core.permissions import IsTenantUser, HasPermission`
+
+### 枚举
+
+- 统一定义在 `apps/core/enums/` 并导出，**禁止业务枚举散落各应用**
+- 继承 `BaseTextEnum`，必须设置 `__enum_key__`
+- → 详见: [docs/STANDARDS/system-features.md](docs/STANDARDS/system-features.md)
+
+### 工具函数
+
+| 模块 | 关键函数 |
+|------|---------|
+| 响应 | `success_response` `error_response` `created_response` |
+| 上下文 | `get_current_tenant()` `get_current_user()` `get_current_company()` |
+| 日志 | `log_operation` (装饰器) / `OperationLogMixin` (ViewSet) |
+| 缓存 | `@cached(timeout=300)` / `cache_manager` / `tenant_cache` |
+| 设置 | `get_setting(key, default)` / `get_settings_group(group)` |
+| 组织 | `OrgFeatureService.is_multi_org_enabled()` |
+
+---
+
+## ⚠️ Tags 配置规范（重要）
+
+**必须配置 tags 的 actions**:
+- 标准 CRUD: `list` `create` `retrieve` `update` `partial_update` `destroy`
+- FetchMixin: `fetch`
+- 基类批量: `bulk_create` `bulk_update` `bulk_delete` `bulk_restore`
+- 所有自定义 `@action`
+
+**Tags 分组格式**: `[模块]·资源名`
+
+| 模块前缀 | 常量示例 | 值 |
+|---------|---------|-----|
+| `[系统]` | `Tags.SYSTEM_AUTH` | `[系统]·认证授权` |
+| `[模型]` | `Tags.MODEL_TEMPLATE` | `[模型]·模型模板` |
+| `[数据]` | `Tags.DATA_DATASOURCE` | `[数据]·数据源` |
+| `[流程]` | `Tags.WORKFLOW_DEFINITION` | `[流程]·工作流定义` |
+| `[集成]` | `Tags.INTEGRATION_CONNECTOR` | `[集成]·应用连接器` |
+| `[日志]` | `Tags.LOG_OPERATION` | `[日志]·操作日志` |
+
+→ 完整常量: [apps/core/openapi/tags.py](apps/core/openapi/tags.py)
+
+---
+
+## ⚡ 快速检查清单
+
+开发新功能前确认：
+
+- [ ] 模型继承正确基类 (OrgAwareModel / TenantAwareModel)
+- [ ] 单文件职责 + `__init__.py` 导出
+- [ ] `db_table = '{app}_{model}'` + 索引
+- [ ] 视图集继承正确基类 + `FetchMixin`
+- [ ] **所有 action 配置 `@extend_schema` tags（含继承的 action）**
+- [ ] **tags 使用 `Tags` 常量**
+- [ ] 配置 `select_related_fields` / `prefetch_related_fields`
+- [ ] 路由注册到 `config/api_urls.py`
+- [ ] 迁移 + 测试
+
+---
+
+## 🚨 常见错误
+
+| # | 错误 | 正确做法 |
+|---|------|---------|
+| 1 | 手动设置 `created_by=user` | 基类自动填充，无需手动 |
+| 2 | 手动 `filter(tenant=t)` | `objects.all()` 自动过滤 |
+| 3 | 继承 `models.Model` | 继承 `TenantAwareModel` |
+| 4 | 多模型放同一文件 | 一模型一文件 |
+| 5 | 继承 action 缺 tags | 必须显式配 `@extend_schema` |
+| 6 | tags 硬编码字符串 | 使用 `Tags.XXX` 常量 |
+| 7 | `ForeignKey("system.User")` | `settings.AUTH_USER_MODEL` |
+| 8 | `export_order = fields` | 删除此行 (import-export 4.0+) |
+| 9 | `autocomplete_fields = ("user",)` | 跨 app 用 `raw_id_fields` |
+| 10 | `@extend_schema(parameters=[name="id"])` | URL 用 `{pk}` 就写 `name="pk"` |
+
+---
+
+## 📚 文档索引
+
+| 场景 | 文档 |
+|------|------|
+| 快速开始 | [docs/GETTING-STARTED.md](docs/GETTING-STARTED.md) |
+| 系统设计 | [docs/ARCH/system-design.md](docs/ARCH/system-design.md) |
+| 核心机制 | [docs/ARCH/core-mechanisms-design.md](docs/ARCH/core-mechanisms-design.md) |
+| 组织权限 | [docs/ARCH/org-permission-design.md](docs/ARCH/org-permission-design.md) |
+| 后端标准 | [docs/STANDARDS/backend-standards.md](docs/STANDARDS/backend-standards.md) |
+| 视图开发 | [docs/STANDARDS/view-development.md](docs/STANDARDS/view-development.md) |
+| 系统功能 | [docs/STANDARDS/system-features.md](docs/STANDARDS/system-features.md) |
+| 字段规范 | [docs/STANDARDS/model-field-standards.md](docs/STANDARDS/model-field-standards.md) |
+| API 规范 | [docs/API/api-specification.md](docs/API/api-specification.md) |
+| OpenAPI Tags | [apps/core/openapi/tags.py](apps/core/openapi/tags.py) |
+| 全局 TODO | [docs/TODO-TRACKING.md](docs/TODO-TRACKING.md) |
+| Ontology 术语 | [docs/ONTOLOGY/README.md](docs/ONTOLOGY/README.md) |
+| 国际化 | [docs/I18N/README.md](docs/I18N/README.md) |
+
+## 🔧 源码索引
+
+| 模块 | 路径 |
+|------|------|
+| 模型基类 | [apps/core/models/](apps/core/models/) |
+| 视图基类 | [apps/core/views/](apps/core/views/) |
+| 序列化器 | [apps/core/serializers/](apps/core/serializers/) |
+| 权限 | [apps/core/permissions/](apps/core/permissions/) |
+| 异常 | [apps/core/exceptions/](apps/core/exceptions/) |
+| 枚举 | [apps/core/enums/](apps/core/enums/) |
+| 缓存 | [apps/core/cache/](apps/core/cache/) |
+| 日志 | [apps/core/logging/](apps/core/logging/) |
+| 工具 | [apps/core/utils/](apps/core/utils/) |
+| 上下文 | [apps/core/context.py](apps/core/context.py) |
+| Tags | [apps/core/openapi/tags.py](apps/core/openapi/tags.py) |
+
+---
+
+## 📝 API 响应格式
+
+```json
+{"code": 200, "message": "success", "data": { ... }}
+```
+
+自动提供的批量操作: `bulk-create/` `bulk-update/` `bulk-delete/` `bulk-restore/`
+高级查询 (FetchMixin): `POST /fetch` — 支持复杂过滤、字段选择、排序
+
+---
+
+*最后更新: 2026-02-22 (文档体系重构 P7)*

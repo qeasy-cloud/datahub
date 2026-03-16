@@ -1,0 +1,428 @@
+{
+  "$schema": "../../docs/DOCS-MODULE/schemas/metadata.schema.json",
+  "product": {
+    "id": "datahub",
+    "name": "轻易云 iPaaS",
+    "description": "轻易云 iPaaS 集成平台使用文档，涵盖快速开始、使用指南、连接器、解决方案、API 参考等完整内容",
+    "icon": "/images/products/datahub-icon.svg",
+    "version": "3.5.1",
+    "lastUpdated": "2026-03-13",
+    "repo": "https://github.com/vincent067/datahub",
+    "homepage": "/features",
+    "keywords": [
+      "轻易云",
+      "iPaaS",
+      "数据集成",
+      "ETL",
+      "API 集成",
+      "连接器",
+      "数据同步",
+      "集成方案",
+      "金蝶",
+      "用友",
+      "钉钉",
+      "企业微信",
+      "飞书",
+      "ERP 对接",
+      "电商集成",
+      "WMS",
+      "OA 协同",
+      "数据中台"
+    ]
+  },
+  "sidebar": [
+    {
+      "title": "首页",
+      "path": ""
+    },
+    {
+      "title": "产品概览",
+      "path": "overview",
+      "children": [
+        { "title": "概览首页", "path": "overview/README" },
+        { "title": "试用与购买", "path": "overview/pricing-and-trial", "badge": "NEW" },
+        { "title": "已接入平台", "path": "overview/supported-platforms" }
+      ]
+    },
+    {
+      "title": "产品介绍",
+      "path": "introduction",
+      "children": [
+        { "title": "平台概览", "path": "introduction/overview" },
+        { "title": "核心能力", "path": "introduction/capabilities" },
+        { "title": "应用场景", "path": "introduction/scenarios" },
+        { "title": "产品优势", "path": "introduction/advantages" },
+        { "title": "已接入平台", "path": "introduction/connected-platforms" },
+        { "title": "试用与购买", "path": "introduction/pricing" }
+      ]
+    },
+    {
+      "title": "快速开始",
+      "path": "quick-start",
+      "children": [
+        { "title": "平台简介", "path": "quick-start/introduction" },
+        { "title": "学习资源与平台接入", "path": "quick-start/learning-resources", "badge": "NEW" },
+        { "title": "安装部署", "path": "quick-start/installation" },
+        { "title": "账号注册", "path": "quick-start/registration" },
+        { "title": "环境配置", "path": "quick-start/environment-setup" },
+        { "title": "第一个集成流程", "path": "quick-start/first-integration", "badge": "HOT" },
+        { "title": "快速入门视频", "path": "quick-start/video-tutorials" }
+      ]
+    },
+    {
+      "title": "使用指南",
+      "path": "guide",
+      "children": [
+        { "title": "平台总览", "path": "guide/platform-overview" },
+        { "title": "配置连接器", "path": "guide/configure-connector" },
+        { "title": "新建集成方案", "path": "guide/create-integration", "badge": "NEW" },
+        { "title": "数据源管理", "path": "guide/data-source-management" },
+        { "title": "数据目标管理", "path": "guide/data-target-management" },
+        { "title": "数据映射", "path": "guide/data-mapping" },
+        { "title": "值格式化", "path": "guide/value-formatting" },
+        { "title": "启动与定时策略", "path": "guide/schedule-and-launch", "badge": "NEW" },
+        { "title": "流程编排", "path": "guide/process-orchestration" },
+        { "title": "任务调度", "path": "guide/task-scheduling" },
+        { "title": "监控告警", "path": "guide/monitoring-alerts" },
+        { "title": "日志管理", "path": "guide/log-management" },
+        { "title": "数据质量管理", "path": "guide/data-quality" },
+        { "title": "变量与参数", "path": "guide/variables-parameters" },
+        { "title": "源平台配置", "path": "guide/source-platform-config", "badge": "NEW" },
+        { "title": "目标平台配置", "path": "guide/target-platform-config", "badge": "NEW" },
+        { "title": "使用调试器", "path": "guide/debugger", "badge": "NEW" },
+        { "title": "数据与队列管理", "path": "guide/data-queue-management", "badge": "NEW" },
+        { "title": "导出数据", "path": "guide/export-data", "badge": "NEW" }
+      ]
+    },
+    {
+      "title": "进阶应用",
+      "path": "advanced",
+      "badge": "PRO",
+      "collapsed": true,
+      "children": [
+        { "title": "集成策略模式", "path": "advanced/integration-strategy", "badge": "NEW" },
+        { "title": "推送微信集成消息", "path": "advanced/wechat-notification", "badge": "NEW" },
+        { "title": "RESTful API Adapter", "path": "advanced/restful-api-adapter", "badge": "NEW" },
+        { "title": "数据差异比对同步", "path": "advanced/data-diff-sync", "badge": "NEW" },
+        { "title": "数据聚合写入", "path": "advanced/data-aggregation", "badge": "NEW" },
+        { "title": "链式触发方案", "path": "advanced/chain-trigger", "badge": "NEW" },
+        { "title": "目标写入结果回写", "path": "advanced/write-back", "badge": "NEW" },
+        { "title": "解析器的应用", "path": "advanced/parser", "badge": "NEW" },
+        { "title": "联查关系型数据", "path": "advanced/relational-lookup", "badge": "NEW" },
+        { "title": "数据补漏措施", "path": "advanced/data-recovery", "badge": "NEW" },
+        { "title": "高级数据转换", "path": "advanced/data-transformation" },
+        { "title": "自定义函数", "path": "advanced/custom-functions", "badge": "NEW" },
+        { "title": "自定义脚本", "path": "advanced/custom-scripts" },
+        { "title": "高级查询条件引擎", "path": "advanced/advanced-query", "badge": "NEW" },
+        { "title": "CDC 实时同步", "path": "advanced/cdc-realtime", "badge": "NEW" },
+        { "title": "批量数据处理", "path": "advanced/batch-processing" },
+        { "title": "异常处理机制", "path": "advanced/error-handling" },
+        { "title": "性能优化", "path": "advanced/performance-tuning" },
+        { "title": "高可用配置", "path": "advanced/high-availability" },
+        { "title": "安全策略", "path": "advanced/security-policies" },
+        { "title": "业务数据建模", "path": "advanced/data-modeling", "badge": "NEW" }
+      ]
+    },
+    {
+      "title": "开发者",
+      "path": "developer",
+      "groupTitle": "开发扩展",
+      "children": [
+        { "title": "开发指南", "path": "developer/guide" },
+        { "title": "开放接口概览", "path": "developer/api-overview" },
+        { "title": "对外开放数据接口", "path": "developer/open-data-api", "badge": "NEW" },
+        { "title": "认证授权", "path": "developer/authentication" },
+        { "title": "Webhook 配置", "path": "developer/webhook" },
+        { "title": "链式事件驱动", "path": "developer/event-driven", "badge": "NEW" },
+        { "title": "SDK 使用", "path": "developer/sdk" },
+        {
+          "title": "源平台特殊操作",
+          "path": "developer/source-special-operations",
+          "badge": "NEW"
+        },
+        { "title": "API 参数导入模板", "path": "developer/api-param-template", "badge": "NEW" },
+        { "title": "自定义连接器开发", "path": "developer/custom-connector", "badge": "NEW" },
+        { "title": "适配器开发", "path": "developer/adapter-development" },
+        { "title": "适配器生命周期", "path": "developer/lifecycle", "badge": "NEW" },
+        { "title": "Python 适配器开发", "path": "developer/python-adapter", "badge": "NEW" },
+        { "title": "自定义数据加工厂", "path": "developer/custom-processor", "badge": "NEW" },
+        {
+          "title": "值解析器高级用法",
+          "path": "developer/value-resolver-advanced",
+          "badge": "NEW"
+        },
+        {
+          "title": "MongoDB 高级集成",
+          "path": "developer/mongodb-advanced",
+          "badge": "NEW"
+        },
+        {
+          "title": "Kafka 消息中间件集成",
+          "path": "developer/kafka-integration",
+          "badge": "NEW"
+        },
+        { "title": "插件机制", "path": "developer/plugin-system" },
+        { "title": "调试与测试", "path": "developer/debugging-testing" }
+      ]
+    },
+    {
+      "title": "连接器",
+      "path": "connectors",
+      "groupTitle": "产品生态",
+      "children": [
+        {
+          "title": "ERP 类",
+          "path": "connectors/erp",
+          "children": [
+            { "title": "连接器概览", "path": "connectors/erp/README" },
+            { "title": "金蝶星瀚", "path": "connectors/erp/kingdee-galaxystar", "badge": "NEW" },
+            { "title": "金蝶云星空", "path": "connectors/erp/kingdee-cloud-galaxy" },
+            { "title": "金蝶云苍穹", "path": "connectors/erp/kingdee-cloud-cosmos" },
+            { "title": "金蝶云星辰", "path": "connectors/erp/kingdee-cloud-star" },
+            { "title": "金蝶 KIS", "path": "connectors/erp/kingdee-kis" },
+            { "title": "金蝶 EAS", "path": "connectors/erp/kingdee-eas" },
+            { "title": "金蝶 K3 WISE", "path": "connectors/erp/kingdee-k3wise" },
+            { "title": "用友 NC", "path": "connectors/erp/yonyou-nc" },
+            { "title": "用友 NC Cloud", "path": "connectors/erp/yonyou-nc-cloud", "badge": "NEW" },
+            { "title": "用友 U8+", "path": "connectors/erp/yonyou-u8", "badge": "NEW" },
+            { "title": "用友 U9", "path": "connectors/erp/yonyou-u9" },
+            { "title": "用友 YonSuite", "path": "connectors/erp/yonyou-yonsuite" },
+            { "title": "用友 BIP", "path": "connectors/erp/yonyou-bip", "badge": "NEW" },
+            { "title": "畅捷通", "path": "connectors/erp/chanjet" },
+            { "title": "畅捷通 T+", "path": "connectors/erp/chanjet-tplus" },
+            { "title": "畅捷通好会计", "path": "connectors/erp/chanjet-accounting" },
+            { "title": "Oracle EBS", "path": "connectors/erp/oracle-ebs", "badge": "NEW" }
+          ]
+        },
+        {
+          "title": "OA / 协同类",
+          "path": "connectors/oa",
+          "children": [
+            { "title": "连接器概览", "path": "connectors/oa/README" },
+            { "title": "钉钉", "path": "connectors/oa/dingtalk" },
+            { "title": "飞书", "path": "connectors/oa/feishu" },
+            { "title": "企业微信", "path": "connectors/oa/wecom" },
+            { "title": "泛微 E9", "path": "connectors/oa/fanwei", "badge": "NEW" },
+            { "title": "泛微 e-cology", "path": "connectors/oa/weaver-ecology" },
+            { "title": "泛微 e-office", "path": "connectors/oa/weaver-eoffice" },
+            { "title": "蓝凌 EKP", "path": "connectors/oa/landray" },
+            { "title": "致远 OA", "path": "connectors/oa/seeyon-oa" },
+            { "title": "致远 A8", "path": "connectors/oa/seeyon-a8", "badge": "NEW" },
+            { "title": "道一云", "path": "connectors/oa/daoyiyun" },
+            { "title": "氚云", "path": "connectors/oa/h3yun", "badge": "NEW" },
+            { "title": "简道云", "path": "connectors/oa/jiandaoyun", "badge": "NEW" },
+            { "title": "汇联易", "path": "connectors/oa/huilianyi", "badge": "NEW" }
+          ]
+        },
+        {
+          "title": "电商 / WMS 类",
+          "path": "connectors/ecommerce",
+          "children": [
+            { "title": "连接器概览", "path": "connectors/ecommerce/README" },
+            { "title": "旺店通", "path": "connectors/ecommerce/wangdian" },
+            { "title": "聚水潭", "path": "connectors/ecommerce/jushuitan" },
+            { "title": "万里牛", "path": "connectors/ecommerce/maliniu" },
+            { "title": "管易云", "path": "connectors/ecommerce/guanyi" },
+            { "title": "易仓", "path": "connectors/ecommerce/ecang" },
+            { "title": "快麦", "path": "connectors/ecommerce/kuaimai" },
+            { "title": "网店管家", "path": "connectors/ecommerce/wangdianguanjia" },
+            { "title": "网店精灵", "path": "connectors/ecommerce/wangdianjingling" },
+            { "title": "班牛", "path": "connectors/ecommerce/banniu", "badge": "NEW" }
+          ]
+        },
+        {
+          "title": "数据库类",
+          "path": "connectors/database",
+          "children": [
+            { "title": "连接器概览", "path": "connectors/database/README" },
+            { "title": "MySQL", "path": "connectors/database/mysql" },
+            { "title": "PostgreSQL", "path": "connectors/database/postgresql" },
+            { "title": "Oracle", "path": "connectors/database/oracle" },
+            { "title": "SQL Server", "path": "connectors/database/sqlserver" },
+            { "title": "MongoDB", "path": "connectors/database/mongodb" },
+            { "title": "Redis", "path": "connectors/database/redis" },
+            { "title": "Elasticsearch", "path": "connectors/database/elasticsearch" },
+            { "title": "ClickHouse", "path": "connectors/database/clickhouse" },
+            { "title": "Kafka", "path": "connectors/database/kafka" }
+          ]
+        },
+        {
+          "title": "CRM / SaaS 类",
+          "path": "connectors/saas",
+          "children": [
+            { "title": "连接器概览", "path": "connectors/saas/README" },
+            { "title": "销帮帮", "path": "connectors/saas/xiaobangbang" },
+            { "title": "纷享销客", "path": "connectors/saas/fenxiangxiaoke" },
+            { "title": "销售易", "path": "connectors/saas/xiaoshouyi" },
+            { "title": "Moka", "path": "connectors/saas/moka" },
+            { "title": "北森", "path": "connectors/saas/beisen" },
+            { "title": "Outreach", "path": "connectors/saas/outreach" },
+            { "title": "Salesforce", "path": "connectors/saas/salesforce" },
+            { "title": "HubSpot", "path": "connectors/saas/hubspot" },
+            { "title": "WordPress", "path": "connectors/saas/wordpress" },
+            { "title": "管家婆", "path": "connectors/saas/wsgjp" },
+            { "title": "管家婆集成", "path": "connectors/saas/guanjiapo", "badge": "NEW" },
+            { "title": "指掌天下", "path": "connectors/saas/zhizhangtianxia" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "解决方案",
+      "path": "solutions",
+      "groupTitle": "场景应用",
+      "children": [
+        { "title": "解决方案概览", "path": "solutions/README" },
+        {
+          "title": "央国企采购平台对接",
+          "path": "solutions/government-procurement",
+          "badge": "NEW"
+        },
+        {
+          "title": "MES 与 ERP 集成方案",
+          "path": "solutions/mes-erp",
+          "badge": "NEW"
+        },
+        {
+          "title": "CRM 集成方案",
+          "path": "solutions/crm-integration",
+          "badge": "NEW"
+        },
+        {
+          "title": "金蝶钉钉审批集成",
+          "path": "solutions/kingdee-dingtalk-approval",
+          "badge": "NEW"
+        },
+        {
+          "title": "金蝶飞书审批集成",
+          "path": "solutions/kingdee-feishu-approval",
+          "badge": "NEW"
+        },
+        {
+          "title": "金蝶聚水潭集成",
+          "path": "solutions/kingdee-jushuitan",
+          "badge": "NEW"
+        },
+        {
+          "title": "金蝶旺店通集成",
+          "path": "solutions/kingdee-wangdian",
+          "badge": "NEW"
+        },
+        {
+          "title": "用友旺店通集成",
+          "path": "solutions/yonyou-wangdian",
+          "badge": "NEW"
+        },
+        {
+          "title": "电商数据中台集成",
+          "path": "solutions/ecommerce-data-hub",
+          "badge": "NEW"
+        },
+        {
+          "title": "OA 费控集成方案",
+          "path": "solutions/oa-finance",
+          "badge": "NEW"
+        },
+        { "title": "制造业", "path": "solutions/manufacturing" },
+        { "title": "零售业", "path": "solutions/retail" },
+        { "title": "跨境电商", "path": "solutions/crossborder-ecommerce" },
+        { "title": "物流仓储", "path": "solutions/logistics" },
+        { "title": "医药健康", "path": "solutions/healthcare" },
+        { "title": "教育培训", "path": "solutions/education" },
+        { "title": "金融服务", "path": "solutions/finance" },
+        { "title": "SaaS 企业", "path": "solutions/saas" }
+      ]
+    },
+    {
+      "title": "标准集成方案",
+      "path": "standard-plans",
+      "badge": "NEW",
+      "children": [
+        { "title": "方案概览", "path": "standard-plans/README" },
+        { "title": "跨境电商方案", "path": "standard-plans/cross-border" },
+        { "title": "国内电商方案", "path": "standard-plans/domestic-ecommerce" },
+        { "title": "电商&财务 ERP 方案", "path": "standard-plans/ecommerce-erp", "badge": "NEW" },
+        { "title": "OA 协同方案", "path": "standard-plans/oa-standard" },
+        { "title": "CRM 集成方案", "path": "standard-plans/crm-standard", "badge": "NEW" },
+        { "title": "MES 集成方案", "path": "standard-plans/mes-standard", "badge": "NEW" },
+        { "title": "WMS 对接标准方案", "path": "standard-plans/wms-standard", "badge": "NEW" },
+        { "title": "ERP 对接方案", "path": "standard-plans/erp-integration" },
+        { "title": "WMS 集成方案", "path": "standard-plans/wms-integration" },
+        { "title": "iPaaS Lite 方案", "path": "standard-plans/ipaas-lite" },
+        { "title": "Lite 集成方案包", "path": "standard-plans/lite-plans", "badge": "NEW" }
+      ]
+    },
+    {
+      "title": "API 参考",
+      "path": "api-reference",
+      "groupTitle": "参考资料",
+      "dividerBefore": true,
+      "children": [
+        { "title": "API 概览", "path": "api-reference/README" },
+        { "title": "认证指南", "path": "api-reference/authentication" },
+        { "title": "接口列表", "path": "api-reference/endpoints", "auth": "login_required" },
+        { "title": "错误码", "path": "api-reference/error-codes" },
+        { "title": "限流说明", "path": "api-reference/rate-limiting" },
+        { "title": "OpenAPI 文档", "path": "api-reference/openapi", "badge": "NEW" },
+        { "title": "平台运维指南", "path": "api-reference/ops-guide", "badge": "NEW" }
+      ]
+    },
+    {
+      "title": "FAQ",
+      "path": "faq"
+    },
+    {
+      "title": "更新日志",
+      "path": "changelog"
+    }
+  ],
+  "permissions": {
+    "default": "public",
+    "restricted": [
+      {
+        "pattern": "api-reference/endpoints",
+        "level": "login_required",
+        "previewLines": 30,
+        "previewMessage": "登录后查看完整 API 接口文档"
+      },
+      {
+        "pattern": "advanced/**",
+        "level": "login_required",
+        "previewLines": 20,
+        "previewMessage": "登录后查看高级功能指南"
+      },
+      {
+        "pattern": "developer/**",
+        "level": "login_required",
+        "previewLines": 25,
+        "previewMessage": "登录后查看开发者文档"
+      }
+    ]
+  },
+  "config": {
+    "defaultLocale": "zh-CN",
+    "editOnGitHub": true,
+    "editBaseUrl": "https://github.com/vincent067/datahub/edit/main/docs-content/datahub",
+    "showLastUpdated": true,
+    "showContributors": true,
+    "showReadingTime": true,
+    "enableComments": true,
+    "enableAISidebar": true,
+    "enableHeatmap": false,
+    "codeTheme": "github-dark",
+    "toc": {
+      "maxDepth": 3,
+      "minHeadingLevel": 2,
+      "maxHeadingLevel": 4
+    },
+    "footer": {
+      "showPrevNext": true,
+      "showFeedback": true
+    },
+    "search": {
+      "enabled": true,
+      "placeholder": "搜索轻易云 iPaaS 文档...",
+      "scope": "product"
+    }
+  }
+}
